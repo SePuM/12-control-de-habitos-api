@@ -77,20 +77,21 @@ function fetchMock() {
   return vi.mocked(globalThis.fetch);
 }
 
-function respuestaSignInOk() {
-  return {
-    ok: true,
+function respuestaSignInOk(): Response {
+  return new Response(JSON.stringify({ idToken: "token-secreto" }), {
     status: 200,
-    json: async () => ({ idToken: "token-secreto" }),
-  };
+    headers: { "content-type": "application/json" },
+  });
 }
 
-function respuestaSignInFallida() {
-  return {
-    ok: false,
-    status: 400,
-    json: async () => ({ error: { message: "INVALID_LOGIN_CREDENTIALS" } }),
-  };
+function respuestaSignInFallida(): Response {
+  return new Response(
+    JSON.stringify({ error: { message: "INVALID_LOGIN_CREDENTIALS" } }),
+    {
+      status: 400,
+      headers: { "content-type": "application/json" },
+    },
+  );
 }
 
 function errorFirebase(codigo: string): Error & { code: string } {
