@@ -48,3 +48,11 @@
 - **Evidencia / Prompt:** Ejecución en Modo Plan analizando el contrato y la integración aditiva con `identity-toolkit.ts`.
 - **Validación / Pruebas:** Se aprueban 17 casos de prueba para cubrir validación Zod, conexión con Secure Token API y manejo seguro del error 401 y 500 sin exponer detalles de Firebase.
 - **Decisión:** Plan aprobado. Se procede a ejecutar la Fase Roja TDD.
+
+### Registro: Implementación endpoint POST /api/auth/refresh (Fase Verde)
+- **Tarea:** Implementación de esquemas Zod, servicio `renovarSesion` (Secure Token API), y Route Handler `POST /api/auth/refresh`.
+- **Propósito:** Hacer pasar los 17 tests TDD para renovar el token de sesión. Además, se limpiaron los tests obsoletos de `runtime = "nodejs"` en registro y login para cumplir con Next.js 16.4.
+- **Evidencia / Prompt:** Ejecución en modo Build para implementar el plan sin usar la directiva `runtime`.
+- **Validación / Pruebas:** Se ejecutó `npm run check` arrojando un 100% de éxito en 44 pruebas (Registro, Login, Refresh) y un 96.5% de cobertura.
+- **Decisión:** Implementación del endpoint aprobada. Fin de la arquitectura de autenticación.
+

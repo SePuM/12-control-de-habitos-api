@@ -6,8 +6,6 @@ import {
   RegistroError,
 } from "@/lib/services/registro.errors";
 
-export const runtime = "nodejs";
-
 const ESTADOS_POR_CODIGO: Record<CodigoErrorRegistro, number> = {
   EMAIL_EN_USO: 409,
   PASSWORD_INVALIDA: 400,

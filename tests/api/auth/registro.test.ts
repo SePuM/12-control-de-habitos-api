@@ -311,9 +311,4 @@ describe("POST /api/auth/registro", () => {
     expect(mocks.createUser).not.toHaveBeenCalled();
     expect(fetchMock()).not.toHaveBeenCalled();
   });
-
-  it("exporta runtime nodejs", async () => {
-    const modulo = await importarModulo();
-    expect(modulo.runtime).toBe("nodejs");
-  });
 });

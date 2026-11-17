@@ -3,6 +3,8 @@ import { z } from "zod";
 const URL_SIGN_IN =
   "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword";
 
+const URL_SECURE_TOKEN = "https://securetoken.googleapis.com/v1/token";
+
 const CODIGOS_DEMASIADOS_INTENTOS = new Set([
   "TOO_MANY_ATTEMPTS_TRY_LATER",
   "QUOTA_EXCEEDED",
@@ -14,6 +16,12 @@ const sesionSchema = z.object({
   expiresIn: z.coerce.number().int().positive(),
   localId: z.string().min(1),
   email: z.string().email().optional(),
+});
+
+const sesionRenovadaSchema = z.object({
+  id_token: z.string().min(1),
+  refresh_token: z.string().min(1),
+  expires_in: z.coerce.number().int().positive(),
 });
 
 interface ErrorIdentityToolkit {
@@ -30,8 +38,17 @@ export interface SesionFirebase {
   email?: string;
 }
 
+export interface SesionRenovadaFirebase {
+  idToken: string;
+  refreshToken: string;
+  expiraEnSeg: number;
+}
+
 export type MotivoErrorIdentityToolkit =
-  "CREDENCIALES_INVALIDAS" | "DEMASIADOS_INTENTOS" | "RESPUESTA_INVALIDA";
+  | "CREDENCIALES_INVALIDAS"
+  | "DEMASIADOS_INTENTOS"
+  | "REFRESH_TOKEN_INVALIDO"
+  | "RESPUESTA_INVALIDA";
 
 export class IdentityToolkitError extends Error {
   constructor(readonly motivo: MotivoErrorIdentityToolkit) {
@@ -119,4 +136,37 @@ export async function verificarCredenciales(
   apiKey: string,
 ): Promise<void> {
   await solicitarInicioSesion(email, password, apiKey);
+}
+
+export async function renovarSesion(
+  refreshToken: string,
+  apiKey: string,
+): Promise<SesionRenovadaFirebase> {
+  const respuesta = await fetch(
+    `${URL_SECURE_TOKEN}?key=${encodeURIComponent(apiKey)}`,
+    {
+      method: "POST",
+      headers: { "content-type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({
+        grant_type: "refresh_token",
+        refresh_token: refreshToken,
+      }).toString(),
+    },
+  );
+
+  if (!respuesta.ok) {
+    throw new IdentityToolkitError("REFRESH_TOKEN_INVALIDO");
+  }
+
+  const resultado = sesionRenovadaSchema.safeParse(await respuesta.json());
+
+  if (!resultado.success) {
+    throw new IdentityToolkitError("RESPUESTA_INVALIDA");
+  }
+
+  return {
+    idToken: resultado.data.id_token,
+    refreshToken: resultado.data.refresh_token,
+    expiraEnSeg: resultado.data.expires_in,
+  };
 }

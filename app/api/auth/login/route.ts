@@ -3,8 +3,6 @@ import { loginSchema } from "@/lib/schemas/login";
 import { iniciarSesionUsuario } from "@/lib/services/login";
 import { type CodigoErrorLogin, LoginError } from "@/lib/services/login.errors";
 
-export const runtime = "nodejs";
-
 const ESTADOS_POR_CODIGO: Record<CodigoErrorLogin, number> = {
   CREDENCIALES_INVALIDAS: 401,
   DEMASIADOS_INTENTOS: 429,

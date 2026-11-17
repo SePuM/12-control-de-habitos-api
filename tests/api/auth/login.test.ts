@@ -295,9 +295,4 @@ describe("POST /api/auth/login", () => {
     expect(JSON.stringify(cuerpoRed)).not.toContain("fallo de red");
     expect(JSON.stringify(cuerpoMalformado)).not.toContain("solo-token");
   });
-
-  it("exporta runtime nodejs", async () => {
-    const modulo = await importarModulo();
-    expect(modulo.runtime).toBe("nodejs");
-  });
 });
