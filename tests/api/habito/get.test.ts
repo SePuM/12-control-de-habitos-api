@@ -5,7 +5,13 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 const mocks = vi.hoisted(() => {
   const verifyIdToken = vi.fn();
   const queryGet = vi.fn();
-  const where = vi.fn(() => ({ get: queryGet }));
+  const where = vi.fn((campo: string, operador: string, valor: unknown) => {
+    if (!campo || !operador || valor === undefined) {
+      throw new Error("Consulta where incompleta");
+    }
+
+    return { get: queryGet };
+  });
   const collectionHabito = { get: queryGet, where };
   const docUsuario = vi.fn(() => ({ collection }));
   const collectionUsuarios = { doc: docUsuario };
@@ -130,10 +136,7 @@ async function obtenerHandler(): Promise<Handler> {
 }
 
 function crearRequest(opciones: OpcionesRequest = {}): NextRequest {
-  const {
-    since,
-    authorization = `Bearer ${TOKEN_VALIDO}`,
-  } = opciones;
+  const { since, authorization = `Bearer ${TOKEN_VALIDO}` } = opciones;
   const url = new URL(URL_HABITOS);
   const headers = new Headers();
 
@@ -154,7 +157,9 @@ async function ejecutar(opciones: OpcionesRequest = {}): Promise<Response> {
   return handler(crearRequest(opciones));
 }
 
-async function leerObjeto(respuesta: Response): Promise<Record<string, unknown>> {
+async function leerObjeto(
+  respuesta: Response,
+): Promise<Record<string, unknown>> {
   return (await respuesta.json()) as Record<string, unknown>;
 }
 

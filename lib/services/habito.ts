@@ -57,6 +57,33 @@ function construirDocumento(id: string, datos: DatosHabito): HabitoDocumento {
   };
 }
 
+export async function listarHabitos(
+  uid: string,
+  since?: Date,
+): Promise<HabitoDocumento[]> {
+  try {
+    const firestore = getAdminFirestore();
+    const coleccion = firestore
+      .collection("usuarios")
+      .doc(uid)
+      .collection("habito");
+    const consulta = since
+      ? coleccion.where("updated_at", ">=", Timestamp.fromDate(since))
+      : coleccion;
+    const resultado = await consulta.get();
+
+    return resultado.docs.map((documento) =>
+      construirDocumento(documento.id, documento.data() as DatosHabito),
+    );
+  } catch (error) {
+    if (error instanceof HabitoError) {
+      throw error;
+    }
+
+    throw new HabitoError("INTERNO", "No se pudieron consultar los hábitos");
+  }
+}
+
 export async function guardarHabito(
   uid: string,
   id: string,

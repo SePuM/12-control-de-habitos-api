@@ -27,4 +27,9 @@ export const habitoIdSchema = z
   .max(128)
   .regex(/^[A-Za-z0-9_-]+$/, "Identificador inválido");
 
+export const habitoQuerySchema = z.object({
+  since: z.iso.datetime({ offset: true }).optional(),
+});
+
 export type HabitoInput = z.infer<typeof habitoSchema>;
+export type HabitoQuery = z.infer<typeof habitoQuerySchema>;
