@@ -56,3 +56,10 @@
 - **Validación / Pruebas:** Se ejecutó `npm run check` arrojando un 100% de éxito en 44 pruebas (Registro, Login, Refresh) y un 96.5% de cobertura.
 - **Decisión:** Implementación del endpoint aprobada. Fin de la arquitectura de autenticación.
 
+### Registro: Planificación endpoint PUT /api/habito/[id]
+- **Tarea:** Diseño arquitectónico y casos de prueba TDD para la creación y actualización idempotente de hábitos (`PUT /api/habito/[id]`).
+- **Propósito:** Implementar autenticación centralizada mediante Bearer token (`verifyIdToken`), validación estricta con Zod (nombre 2-40 chars, meta de pasos 500-50000), y upsert transaccional en Firestore (`usuarios/{uid}/habito/{id}`) conservando `created_at` y serializando timestamps a ISO 8601.
+- **Evidencia / Prompt:** Ejecución de Modo Plan analizando reglas de negocio (secciones 9.2-9.4) y compatibilidad con Next.js 16.4.
+- **Validación / Pruebas:** Se aprueba el diseño de 20 casos de prueba en Vitest cubriendo errores 401 (auth), 400 (validación y campos extra), 200 (creación/actualización idempotente) y 500 (fallos de Firestore).
+- **Decisión:** Plan aprobado. Se procede a ejecutar la Fase Roja (TDD) creando únicamente `tests/api/habito/put.test.ts`.
+
