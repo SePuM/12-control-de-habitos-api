@@ -89,6 +89,7 @@ _Nota: Se llenará una vez por tarea usando el ciclo: Modo plan -> Edición -> R
 - **Decisión:** Plan aprobado. Se procede a la Fase Roja (TDD) creando únicamente `tests/api/habito/get.test.ts`.
 
 ### Registro: Implementación endpoint GET /api/habito (Fase Verde)
+
 - **Tarea:** Implementar `GET /api/habito` para listar y sincronizar hábitos.
 - **Propósito:** Hacer pasar los 16 tests unitarios. Se añadió la validación `since` (ISO 8601 UTC) y la lógica de filtrado `>= updated_at` en Firestore, incluyendo borrados lógicos y la serialización nativa de Zod.
 - **Evidencia / Prompt:** Ejecución en modo Build. El agente solucionó errores de tipado en los mocks de pruebas (`tests/api/habito/get.test.ts`) y formateó proactivamente los archivos Markdown para cumplir con las reglas de Prettier del proyecto.
@@ -96,8 +97,17 @@ _Nota: Se llenará una vez por tarea usando el ciclo: Modo plan -> Edición -> R
 - **Decisión:** Implementación del endpoint aprobada.
 
 ### Registro: Planificación endpoint DELETE /api/habito/[id]
+
 - **Tarea:** Diseño arquitectónico y casos de prueba TDD para el borrado lógico de hábitos (`DELETE /api/habito/[id]`).
 - **Propósito:** Implementar una transacción Firestore que busque el documento y le aplique un `update` para inyectar `deleted_at: serverTimestamp()` y `updated_at: serverTimestamp()` conservando los demás campos. Si no existe, devuelve 404. La respuesta 200 devuelve el documento actualizado.
 - **Evidencia / Prompt:** Ejecución en Modo Plan. Se extenderán los errores de dominio para incluir `NO_ENCONTRADO` y se usarán métodos transaccionales para garantizar atomicidad y devolver timestamps ISO 8601.
 - **Validación / Pruebas:** Se aprueba el diseño de 17 casos unitarios cubriendo 401, 400 (id inválido), 404 (documento inexistente), 200 (borrado lógico idempotente preservando data) y 500.
 - **Decisión:** Plan aprobado. Se procede a la Fase Roja (TDD) creando únicamente `tests/api/habito/delete.test.ts`.
+
+
+### Registro: Implementación endpoint DELETE /api/habito/[id] (Fase Verde)
+- **Tarea:** Implementar el endpoint de borrado lógico transaccional `DELETE /api/habito/[id]`.
+- **Propósito:** Hacer pasar los 17 tests (TDD). Se implementó `transaction.update()` en Firestore para inyectar `deleted_at: serverTimestamp()` conservando la información original.
+- **Evidencia / Prompt:** Ejecución en modo Build. Se capturó correctamente el error `NO_ENCONTRADO` (404) y el handler serializó el documento en formato ISO 8601 UTC.
+- **Validación / Pruebas:** `npm run check` completado. 97/97 tests en verde. Cobertura global de 94.5% (statements/lines).
+- **Decisión:** Implementación del endpoint aprobada. El CRUD de Hábitos y la API quedan concluidos.

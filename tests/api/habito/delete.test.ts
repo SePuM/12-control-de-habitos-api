@@ -117,10 +117,7 @@ function crearRequest(opciones: OpcionesRequest = {}): {
   request: Request;
   id: string;
 } {
-  const {
-    id = ID_HABITO,
-    authorization = `Bearer ${TOKEN_VALIDO}`,
-  } = opciones;
+  const { id = ID_HABITO, authorization = `Bearer ${TOKEN_VALIDO}` } = opciones;
   const headers = new Headers();
 
   if (authorization !== null) {
@@ -371,9 +368,7 @@ describe("DELETE /api/habito/[id]", () => {
   });
 
   it("devuelve 500 genérico si falla la transacción", async () => {
-    mocks.runTransaction.mockRejectedValueOnce(
-      new Error("transacción caída"),
-    );
+    mocks.runTransaction.mockRejectedValueOnce(new Error("transacción caída"));
     const respuesta = await ejecutar();
     const cuerpo = await leerJson(respuesta);
 

@@ -1,4 +1,4 @@
-export type CodigoErrorHabito = "INTERNO";
+export type CodigoErrorHabito = "INTERNO" | "NO_ENCONTRADO";
 
 export class HabitoError extends Error {
   constructor(

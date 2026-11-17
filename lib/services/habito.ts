@@ -84,6 +84,48 @@ export async function listarHabitos(
   }
 }
 
+export async function eliminarHabito(
+  uid: string,
+  id: string,
+): Promise<HabitoDocumento> {
+  try {
+    const firestore = getAdminFirestore();
+    const referencia = firestore
+      .collection("usuarios")
+      .doc(uid)
+      .collection("habito")
+      .doc(id);
+
+    await firestore.runTransaction(async (transaccion) => {
+      const actual = await transaccion.get(referencia);
+
+      if (!actual.exists) {
+        throw new HabitoError("NO_ENCONTRADO", "Hábito no encontrado");
+      }
+
+      await transaccion.update(referencia, {
+        deleted_at: FieldValue.serverTimestamp(),
+        updated_at: FieldValue.serverTimestamp(),
+      });
+    });
+
+    const eliminado = await referencia.get();
+    const documento = eliminado.data() as DatosHabito | undefined;
+
+    if (!eliminado.exists || !documento) {
+      throw new HabitoError("INTERNO", "No se pudo leer el hábito eliminado");
+    }
+
+    return construirDocumento(id, documento);
+  } catch (error) {
+    if (error instanceof HabitoError) {
+      throw error;
+    }
+
+    throw new HabitoError("INTERNO", "No se pudo eliminar el hábito");
+  }
+}
+
 export async function guardarHabito(
   uid: string,
   id: string,

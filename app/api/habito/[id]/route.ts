@@ -2,7 +2,8 @@ import { NextResponse } from "next/server";
 import type { ZodError } from "zod";
 import { NoAutorizadoError, obtenerUidDesdeRequest } from "@/lib/auth/bearer";
 import { habitoIdSchema, habitoSchema } from "@/lib/schemas/habito";
-import { guardarHabito } from "@/lib/services/habito";
+import { eliminarHabito, guardarHabito } from "@/lib/services/habito";
+import { HabitoError } from "@/lib/services/habito.errors";
 
 type ContextoRuta = {
   params: Promise<{ id: string }>;
@@ -72,6 +73,42 @@ export async function PUT(
 
     return NextResponse.json(documento, { status: 200 });
   } catch {
+    return respuestaError(500, "Error interno del servidor");
+  }
+}
+
+export async function DELETE(
+  request: Request,
+  contexto: ContextoRuta,
+): Promise<Response> {
+  let uid: string;
+
+  try {
+    uid = await obtenerUidDesdeRequest(request);
+  } catch (error) {
+    if (error instanceof NoAutorizadoError) {
+      return respuestaError(401, "No autorizado");
+    }
+
+    return respuestaError(500, "Error interno del servidor");
+  }
+
+  const { id } = await contexto.params;
+  const idResultado = habitoIdSchema.safeParse(id);
+
+  if (!idResultado.success) {
+    return respuestaValidacion(idResultado.error);
+  }
+
+  try {
+    const documento = await eliminarHabito(uid, idResultado.data);
+
+    return NextResponse.json(documento, { status: 200 });
+  } catch (error) {
+    if (error instanceof HabitoError && error.codigo === "NO_ENCONTRADO") {
+      return respuestaError(404, "Hábito no encontrado");
+    }
+
     return respuestaError(500, "Error interno del servidor");
   }
 }
