@@ -16,7 +16,7 @@ const mocks = vi.hoisted(() => {
   );
   const docHabito = vi.fn((id: string) => ({ id, get: docGet }));
   const collectionHabito = { doc: docHabito };
-  const docUsuario = vi.fn((uid: string) => ({ collection }));
+  const docUsuario = vi.fn(() => ({ collection }));
   const collectionUsuarios = { doc: docUsuario };
   const collection = vi.fn((nombre: string) => {
     if (nombre === "usuarios") {
@@ -55,9 +55,7 @@ vi.mock("@/lib/firebase/admin", () => ({
 const ID_HABITO = "habito-123";
 const TOKEN_VALIDO = "token-valido";
 const UID_TOKEN = "uid-token-123";
-const FECHA_CREADO = Timestamp.fromDate(
-  new Date("2026-01-10T10:00:00.000Z"),
-);
+const FECHA_CREADO = Timestamp.fromDate(new Date("2026-01-10T10:00:00.000Z"));
 const FECHA_ACTUALIZADO = Timestamp.fromDate(
   new Date("2026-01-10T11:00:00.000Z"),
 );
@@ -185,7 +183,7 @@ describe("PUT /api/habito/[id]", () => {
       id,
       get: mocks.docGet,
     }));
-    mocks.docUsuario.mockImplementation((uid: string) => ({
+    mocks.docUsuario.mockImplementation(() => ({
       collection: mocks.collection,
     }));
     mocks.collection.mockImplementation((nombre: string) => {
@@ -214,7 +212,9 @@ describe("PUT /api/habito/[id]", () => {
   });
 
   it("devuelve 401 si el esquema no es Bearer", async () => {
-    const respuesta = await ejecutar({ authorization: `Basic ${TOKEN_VALIDO}` });
+    const respuesta = await ejecutar({
+      authorization: `Basic ${TOKEN_VALIDO}`,
+    });
 
     await esperar401(respuesta);
     expect(mocks.verifyIdToken).not.toHaveBeenCalled();

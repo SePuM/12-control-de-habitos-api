@@ -63,3 +63,9 @@
 - **Validación / Pruebas:** Se aprueba el diseño de 20 casos de prueba en Vitest cubriendo errores 401 (auth), 400 (validación y campos extra), 200 (creación/actualización idempotente) y 500 (fallos de Firestore).
 - **Decisión:** Plan aprobado. Se procede a ejecutar la Fase Roja (TDD) creando únicamente `tests/api/habito/put.test.ts`.
 
+### Registro: Implementación endpoint PUT /api/habito/[id] (Fase Verde)
+- **Tarea:** Implementar autenticación, validación Zod y transacción en Firestore para `PUT /api/habito/[id]`.
+- **Propósito:** Hacer pasar los 20 tests unitarios asegurando idempotencia (conservación de `created_at`), inyección de timestamps (`updated_at`, `deleted_at: null`) y rechazo de variables no autorizadas.
+- **Evidencia / Prompt:** Ejecución en modo Build para crear los servicios y esquemas planificados. Se ajustó el mock de `docUsuario` en los tests para corregir advertencias de TypeScript.
+- **Validación / Pruebas:** `npm run check` completado con éxito. 64/64 pruebas en verde y >93% de cobertura global.
+- **Decisión:** Implementación del endpoint aprobada.
