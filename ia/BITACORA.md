@@ -69,3 +69,10 @@
 - **Evidencia / Prompt:** Ejecución en modo Build para crear los servicios y esquemas planificados. Se ajustó el mock de `docUsuario` en los tests para corregir advertencias de TypeScript.
 - **Validación / Pruebas:** `npm run check` completado con éxito. 64/64 pruebas en verde y >93% de cobertura global.
 - **Decisión:** Implementación del endpoint aprobada.
+
+### Registro: Planificación endpoint GET /api/habito
+- **Tarea:** Diseño arquitectónico y casos de prueba TDD para la consulta y sincronización de hábitos (`GET /api/habito`).
+- **Propósito:** Implementar la lectura de Firestore (`usuarios/{uid}/habito`) filtrada opcionalmente por `updated_at >= since`. Se incluirán los documentos eliminados lógicamente (`deleted_at != null`) y se serializarán las fechas a ISO 8601 para que la app móvil en React Native pueda sincronizar su base de datos local SQLite.
+- **Evidencia / Prompt:** Ejecución en Modo Plan. Se decidió usar `NextRequest` para leer `nextUrl.searchParams` y `z.iso.datetime()` de Zod para validar el parámetro `since`.
+- **Validación / Pruebas:** Se aprueba el diseño de 16 casos de prueba unitaria cubriendo 401 (auth), 400 (parámetro `since` inválido), 200 (consultas con y sin filtro, incluyendo borrados lógicos) y 500 (fallo interno).
+- **Decisión:** Plan aprobado. Se procede a la Fase Roja (TDD) creando únicamente `tests/api/habito/get.test.ts`.
