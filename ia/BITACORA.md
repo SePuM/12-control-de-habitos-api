@@ -34,3 +34,10 @@
 - **Evidencia / Prompt:** Ejecución de Modo Plan analizando requisitos (sección 9.1) y código existente (`lib/firebase/`, endpoint de registro).
 - **Validación / Pruebas:** Se aprueba el diseño de 16 casos de prueba, la extensión segura de `identity-toolkit.ts` (sin romper tests anteriores) y la validación Zod que normaliza correos.
 - **Decisión:** Plan aprobado. Se procede a ejecutar la fase Roja (TDD) creando únicamente `tests/api/auth/login.test.ts`.
+
+### Registro: Implementación endpoint POST /api/auth/login (Fase Verde)
+- **Tarea:** Implementación de esquemas Zod, servicio `iniciarSesion` (Identity Toolkit REST API), y Route Handler `POST /api/auth/login`.
+- **Propósito:** Hacer pasar los 16 tests TDD respetando el contrato de respuesta y la seguridad (ocultar enumeración de usuarios).
+- **Evidencia / Prompt:** Ejecución en modo Build para implementar el plan aprobado (pasos 2-8).
+- **Validación / Pruebas:** Se ejecutó la suite completa (29/29 tests aprobados) y `npm run check` arrojando un 96.22% de cobertura de código. Se omitió temporalmente la advertencia de ESM de Vite.
+- **Decisión:** Implementación del endpoint aprobada y lista para integrarse al registro de la aplicación móvil.
