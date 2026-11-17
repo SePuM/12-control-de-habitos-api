@@ -41,3 +41,10 @@
 - **Evidencia / Prompt:** Ejecución en modo Build para implementar el plan aprobado (pasos 2-8).
 - **Validación / Pruebas:** Se ejecutó la suite completa (29/29 tests aprobados) y `npm run check` arrojando un 96.22% de cobertura de código. Se omitió temporalmente la advertencia de ESM de Vite.
 - **Decisión:** Implementación del endpoint aprobada y lista para integrarse al registro de la aplicación móvil.
+
+### Registro: Planificación endpoint POST /api/auth/refresh
+- **Tarea:** Diseño TDD para la renovación del token de sesión (`POST /api/auth/refresh`).
+- **Propósito:** Validar el `refreshToken` usando la API `securetoken.googleapis.com` de Firebase y devolver la sesión renovada (`{ token, refreshToken, expiraEnSeg }`) o un error 401 genérico ("Token de refresco inválido").
+- **Evidencia / Prompt:** Ejecución en Modo Plan analizando el contrato y la integración aditiva con `identity-toolkit.ts`.
+- **Validación / Pruebas:** Se aprueban 17 casos de prueba para cubrir validación Zod, conexión con Secure Token API y manejo seguro del error 401 y 500 sin exponer detalles de Firebase.
+- **Decisión:** Plan aprobado. Se procede a ejecutar la Fase Roja TDD.
