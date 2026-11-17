@@ -27,3 +27,10 @@
 - **Evidencia / Prompt:** Ejecución en modo Build tras aprobar la fase roja; ajuste automático de tipado `Response` en mocks de `tests/api/auth/registro.test.ts` y formateo con Prettier.
 - **Validación / Pruebas:** `npm run check` exitoso (`typecheck`, `lint`, `format:check` y `vitest --coverage` con 13/13 pruebas aprobadas y 96.07% de cobertura de sentencias).
 - **Decisión:** Implementación aprobada y lista para commit.
+
+### Registro: Planificación endpoint POST /api/auth/login
+- **Tarea:** Diseño arquitectónico y casos de prueba TDD para el inicio de sesión (`POST /api/auth/login`).
+- **Propósito:** Validar credenciales usando Identity Toolkit, devolver estructura estricta (`{ token, refreshToken, expiraEnSeg, usuario }`) y manejar errores de seguridad (401 genérico para evitar enumeración, 429 para rate limit).
+- **Evidencia / Prompt:** Ejecución de Modo Plan analizando requisitos (sección 9.1) y código existente (`lib/firebase/`, endpoint de registro).
+- **Validación / Pruebas:** Se aprueba el diseño de 16 casos de prueba, la extensión segura de `identity-toolkit.ts` (sin romper tests anteriores) y la validación Zod que normaliza correos.
+- **Decisión:** Plan aprobado. Se procede a ejecutar la fase Roja (TDD) creando únicamente `tests/api/auth/login.test.ts`.
