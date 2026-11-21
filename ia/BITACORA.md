@@ -1,20 +1,20 @@
 # Bitácora de Uso de IA
 
-_Nota: Se llenará una vez por tarea usando el ciclo: Modo plan -> Edición -> Revisión del diff completo._
+_Nota: Cada tarea se registra con el ciclo: Modo plan -> Edición -> Revisión del diff completo._
 
 ## Registro de Tareas
 
-- **Tarea:** (Ej. Crear endpoint de Login)
-- **Propósito:** (Lo que se busca lograr)
-- **Evidencia / Prompt:** (El texto enviado)
-- **Validación / Pruebas:** (Comprobación en Vitest)
-- **Decisión:** (Aprobado / Rechazado)
+- **Tarea:** Ajustes puntuales de cierre (permisos Android, fechas futuras, Firestore y documentación).
+- **Propósito:** Completar seguridad y evidencias sin exponer secretos ni romper las suites existentes.
+- **Evidencia / Prompt:** Solicitud del usuario con cinco cambios puntuales y verificación final TDD.
+- **Validación / Pruebas:** Nuevas pruebas en rojo y luego en verde; `npm test` y `npm run check`.
+- **Decisión:** Aprobado para revisión; sin commit.
 
 ## Casos de Rechazo o Corrección (Mínimo 3 obligatorios)
 
-1. **Caso 1:** (Pendiente de documentar durante el desarrollo)
-2. **Caso 2:** (Pendiente de documentar durante el desarrollo)
-3. **Caso 3:** (Pendiente de documentar durante el desarrollo)
+1. **Caso 1:** Se descartó exportar `runtime = "nodejs"` en rutas Next.js 16.4; se conservó la convención del repositorio.
+2. **Caso 2:** Se corrigieron tipados de mocks en Vitest para eliminar `any` y mantener `strict`.
+3. **Caso 3:** Se reemplazaron textos incompletos y el README por defecto por evidencias y documentación real del cierre.
 
 ### Registro: Planificación endpoint POST /api/auth/registro
 
@@ -143,3 +143,11 @@ _Nota: Se llenará una vez por tarea usando el ciclo: Modo plan -> Edición -> R
 - **Evidencia / Prompt:** Ejecución en Modo Build con TDD estricto: fase roja con 20 fallos y fase verde con 20 aciertos.
 - **Validación / Pruebas:** `npm run check` exitoso. 171/171 pruebas aprobadas. Cobertura global de 93.14% (statements/lines).
 - **Decisión:** Implementación aprobada. El hito de rachas queda completado.
+
+### Registro: Ajustes de cierre y contención (Fases Roja/Verde)
+
+- **Tarea:** Permisos Android, rechazo de fechas futuras, reglas/índices Firestore y documentación de cierre.
+- **Propósito:** Conservar el contrato existente de `YYYY-MM-DD`, reforzar la seguridad y dejar evidencias sin secretos.
+- **Evidencia / Prompt:** Solicitud puntual del usuario con verificación final en ambos repositorios.
+- **Validación / Pruebas:** Fase roja verificada antes de cada implementación; fase verde con 8 pruebas nuevas aprobadas y suite API en 179/179.
+- **Decisión:** Aprobado para revisión; no se creó commit.

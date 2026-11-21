@@ -1,7 +1,17 @@
 import { z } from "zod";
 import { habitoIdSchema } from "@/lib/schemas/habito";
 
-export const fechaRegistroSchema = z.iso.date();
+function esFechaFutura(valor: string): boolean {
+  const fecha = new Date(valor);
+
+  return fecha.getTime() > Date.now();
+}
+
+export const fechaRegistroSchema = z.iso
+  .date()
+  .refine((valor) => !esFechaFutura(valor), {
+    message: "No se permiten fechas futuras",
+  });
 
 export const registroHabitoSchema = z
   .object({

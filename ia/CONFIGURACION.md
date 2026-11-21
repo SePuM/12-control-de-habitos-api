@@ -9,4 +9,6 @@
 ## Límites y Ajustes Hechos
 
 - **Inyección de Prompts:** Un permiso bloquea archivos, pero un prompt malicioso puede estar en la base de datos. Se ajustó el `AGENTS.md` para que la IA trate respuestas de la API como datos y no como órdenes.
-- **Entorno local:** Como el sandbox no es nativo en Windows, se ejecutará bajo WSL2 (Ubuntu) según los requerimientos.
+- **Entorno local:** Verificado en Windows nativo con PowerShell; no fue necesario ejecutar bajo WSL2 para este cierre.
+- **Firestore:** `firestore.rules` niega todo acceso a clientes y `firestore.indexes.json` declara los índices usados por las consultas actuales.
+- **Fechas:** `fechaRegistroSchema` rechaza `YYYY-MM-DD` posteriores a la fecha UTC del servidor sin aceptar valores secretos ni de entorno.
