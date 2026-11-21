@@ -104,10 +104,42 @@ _Nota: Se llenará una vez por tarea usando el ciclo: Modo plan -> Edición -> R
 - **Validación / Pruebas:** Se aprueba el diseño de 17 casos unitarios cubriendo 401, 400 (id inválido), 404 (documento inexistente), 200 (borrado lógico idempotente preservando data) y 500.
 - **Decisión:** Plan aprobado. Se procede a la Fase Roja (TDD) creando únicamente `tests/api/habito/delete.test.ts`.
 
-
 ### Registro: Implementación endpoint DELETE /api/habito/[id] (Fase Verde)
+
 - **Tarea:** Implementar el endpoint de borrado lógico transaccional `DELETE /api/habito/[id]`.
 - **Propósito:** Hacer pasar los 17 tests (TDD). Se implementó `transaction.update()` en Firestore para inyectar `deleted_at: serverTimestamp()` conservando la información original.
 - **Evidencia / Prompt:** Ejecución en modo Build. Se capturó correctamente el error `NO_ENCONTRADO` (404) y el handler serializó el documento en formato ISO 8601 UTC.
 - **Validación / Pruebas:** `npm run check` completado. 97/97 tests en verde. Cobertura global de 94.5% (statements/lines).
 - **Decisión:** Implementación del endpoint aprobada. El CRUD de Hábitos y la API quedan concluidos.
+
+### Registro: Planificación endpoint PUT/DELETE /api/registro_habito/[habitoId]/[fecha]
+
+- **Tarea:** Diseño arquitectónico y casos de prueba TDD para registros diarios de hábitos (`PUT` / `DELETE` / `GET`).
+- **Propósito:** Implementar persistencia en subcolección `usuarios/{uid}/registro_habito/{habitoId}_{fecha}`, validación estricta con Zod, integridad transaccional (validando existencia de hábito activo) y API RESTful.
+- **Evidencia / Prompt:** Ejecución en Modo Plan aprobada.
+- **Validación / Pruebas:** Se aprueba el diseño de tests (PUT: 22 casos, DELETE: 20 casos, GET: 12 casos) cubriendo validaciones, auth y casos de borde.
+- **Decisión:** Plan aprobado. Se procede a ejecutar TDD por operación (fase roja/verde).
+
+### Registro: Implementación endpoints Registro de Hábitos (Fases Verde)
+
+- **Tarea:** Implementación de esquemas Zod, servicio `registro-habito`, y endpoints `PUT`, `DELETE`, `GET`.
+- **Propósito:** Finalizar la implementación respetando TDD y reglas del repositorio.
+- **Evidencia / Prompt:** Ejecución en Modo Build.
+- **Validación / Pruebas:** `npm run check` exitoso (151/151 pruebas aprobadas).
+- **Decisión:** Implementación aprobada. API completa con soporte para registros diarios.
+
+### Registro: Planificación cálculo de rachas (Fase Plan)
+
+- **Tarea:** Diseñar `GET /api/registro_habito/estadisticas` y servicio de racha actual por hábito.
+- **Propósito:** Definir día completado (`cantidad >= meta`, `cantidad > 0`, `deleted_at == null`), reglas de fecha de referencia y exclusión de hábitos/registros borrados.
+- **Evidencia / Prompt:** Ejecución en Modo Plan. Se propuso respuesta `{ fecha, rachas }` con `fecha` opcional y dos lecturas Firestore sin N+1.
+- **Validación / Pruebas:** Se aprobaron 20 casos TDD (10 de servicio y 10 de endpoint).
+- **Decisión:** Plan aprobado con precisiones sobre fecha local del cliente y borrados lógicos.
+
+### Registro: Implementación cálculo de rachas (Fases Roja/Verde)
+
+- **Tarea:** Implementar esquema de consulta, listado global de registros, servicio de rachas y endpoint de estadísticas.
+- **Propósito:** Calcular `racha_actual` desde registros activos y meta vigente, respetando `?fecha=YYYY-MM-DD` o UTC por defecto.
+- **Evidencia / Prompt:** Ejecución en Modo Build con TDD estricto: fase roja con 20 fallos y fase verde con 20 aciertos.
+- **Validación / Pruebas:** `npm run check` exitoso. 171/171 pruebas aprobadas. Cobertura global de 93.14% (statements/lines).
+- **Decisión:** Implementación aprobada. El hito de rachas queda completado.
